@@ -4,7 +4,7 @@ import * as fs from "fs";
 export interface WidgetParams {
   defaultFlow?: "ONRAMP" | "OFFRAMP" | "SWAP";
   enabledFlows?: string;
-  hostApiKey: string;
+  hostApiKey?: string;
   userAddress?: string;
   swapAsset?: string;
   fiatCurrency?: string;
