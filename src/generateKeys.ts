@@ -43,21 +43,12 @@ export function generateEd25519KeyPair(): KeyPairResult {
   fs.writeFileSync(publicKeyPath, publicKey);
   console.log(`Public key saved to: ${publicKeyPath}`);
 
-  // Extract the raw base64 content from PEM format
-  const publicKeyBase64 = publicKey
-    .replace("-----BEGIN PUBLIC KEY-----", "")
-    .replace("-----END PUBLIC KEY-----", "")
-    .replace(/\s/g, "");
 
   console.log("\n--- IMPORTANT ---");
   console.log("Please share the PUBLIC KEY with Ramp Network:");
   console.log("File location:", publicKeyPath);
   console.log("\nPublic Key Content (PEM format):");
   console.log(publicKey);
-  console.log("\nPublic Key Content (Ramp format):");
-  console.log("====begin public key====");
-  console.log(publicKeyBase64);
-  console.log("====end public key====");
 
   return { publicKey, privateKey, publicKeyPath, privateKeyPath };
 }
