@@ -18,49 +18,37 @@ export interface SignedUrlResult {
   queryString: string;
 }
 
-/**
- * Generate signed Ramp widget URL
- */
 export function generateSignedUrl(
   privateKeyPath: string,
   widgetParams: WidgetParams = {}
 ): SignedUrlResult {
-  // Load private key
   const privateKey = fs.readFileSync(privateKeyPath, "utf8");
 
-  // Default widget parameters
   const defaultParams: WidgetParams = {
     defaultFlow: "ONRAMP",
     enabledFlows: "ONRAMP",
-    hostApiKey: undefined, // replace this with your host api key
+    hostApiKey: "[API KEY HERE]",
+    hostLogoUrl: 'https://example.com/logo.png'
   };
 
-  // Merge default params with provided params
   const allParams: WidgetParams = { ...defaultParams, ...widgetParams };
 
-  // Build query string without URL encoding
-  const queryPairs: string[] = [];
+  const urlSearchParams = new URLSearchParams();
   Object.entries(allParams).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
-      queryPairs.push(`${key}=${value}`);
+      urlSearchParams.set(key, value);
     }
   });
+  const queryString = urlSearchParams.toString();
 
-  const queryString = queryPairs.join('&');
-
-  // Add timestamp and sign
   const timestamp = Math.floor(Date.now());
   const queryWithTimestamp = `${queryString}&timestamp=${timestamp}`;
 
-  console.log("Query string to sign:", queryWithTimestamp);
-
-  // Create signature using Ed25519
   const data = Buffer.from(queryWithTimestamp, "utf8");
   const signature = crypto.sign(null, data, privateKey);
   const base64Signature = signature.toString("base64");
 
-  // Create final URL
-  const baseUrl = ""; // put the widget URL here
+  const baseUrl = "https://app.rampnetwork.com";
   const finalUrl = `${baseUrl}?${queryWithTimestamp}&signature=${encodeURIComponent(
     base64Signature
   )}`;
